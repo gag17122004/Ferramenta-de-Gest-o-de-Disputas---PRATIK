@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRATIK - Gerador de Disputas Shopee</title>
+    <style>
+        /* CSS Reset Básico */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f9fc;
+            color: #333;
+        }
+
+        /* Variáveis CSS para Cores Personalizáveis */
+        :root {
+            --primary-color: #003366; /* Azul Escuro PRATIK */
+            --secondary-color: #fca311; /* Laranja Destaque */
+            --text-color: #333;
+            --border-color: #ddd;
+            --background-light: #ffffff;
+            --background-dark: #f0f2f5;
+        }
+
+        /* Layout Principal */
+        .container {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: var(--background-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        /* Cabeçalho */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+
+        .header img {
+            width: 200px; /* Ajuste o tamanho da logo para melhor visualização */
+            height: auto;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            font-size: 1.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .header p {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        /* Formulário de Seleção */
+        .selection-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
+        .form-group select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            background-color: #fff;
+            appearance: none; /* Remove seta padrão em alguns navegadores */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+        }
+
+        /* Área de Resultado */
+        .result-panel {
+            margin-top: 20px;
+        }
+
+        #resultArea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 1rem;
+            line-height: 1.6;
+            resize: vertical;
+            background-color: var(--background-light);
+            box-sizing: border-box; /* Garante que padding não aumente a largura total */
+        }
+
+        #resultArea:empty:before {
+            content: "Selecione as opções acima para gerar o script de defesa.";
+            color: #999;
+        }
+
+        /* Botões */
+        .button-panel {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #copyButton {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+        #copyButton:hover {
+            background-color: #002244;
+        }
+
+        #generateButton {
+            background-color: #e0e0e0;
+            color: var(--text-color);
+        }
+
+        #generateButton:hover {
+            background-color: #ccc;
+        }
+
+        /* Responsividade */
+        @media (max-width: 768px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            .selection-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header">
+            <!-- Logo PRATIK (Base64) -->
+            <!-- Substitua a string Base64 pela sua logo real. A string abaixo é um placeholder. -->
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAASwAAACWAQMAAAB+l2YIAAAABlBMVEX///8AAABVwtS5AAAAAWJLR0QAiAUdSAAAAAlwSFlzAAALEwAACxMBAJqcGAAAAAd0SU1FB+cGEQoGJTf4tUAAAASdEVYdFNvZnR3YXJlAE9wZW5BSSBkYXRhLmV4ZGV2aWNlAO/gLgAAABl0RVh0Q3JlYXRpb24gVGltZQAyMDIzLTA2LTE3VDEwOjA2OjM3LTMwMDD6lqQAAAAOSURBVFjD7cEBAAAAAP+3BwAEIAABAAAAAAB+l2YIAAAAASUVORK5CYII=" alt="PRATIK Distribuidora Logo">
+            <h1>Gerador de Scripts de Defesa (Shopee)</h1>
+            <p>Automatize a gestão de disputas com textos aleatórios para evitar detecção algorítmica.</p>
+        </div>
+
+        <div class="selection-panel">
+            <div class="form-group">
+                <label for="customerReason">Motivo do Cliente (Disputa Shopee):</label>
+                <select id="customerReason">
+                    <option value="" disabled selected>Selecione o motivo...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="ourJustification">Selecione o Motivo Da Disputa com a Shopee:</label>
+                <select id="ourJustification">
+                    <option value="" disabled selected>Selecione a justificativa...</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="result-panel">
+            <label for="resultArea">Script de Defesa Gerado:</label>
+            <textarea id="resultArea" readonly></textarea>
+        </div>
+
+        <div class="button-panel">
+            <button id="copyButton" class="button">Copiar Texto</button>
+            <button id="generateButton" class="button">Gerar Nova Variante</button>
+        </div>
+    </div>
+
+    <script>
+        // --- Estrutura de Dados (Data Layer) ---
+        // Objeto principal que armazena todos os scripts de defesa.
+        // Formato: disputeScripts[motivoCliente][justificativaInterna] = [variante1, variante2, ...]
+        // Para adicionar novas combinações, basta seguir este padrão.
+        const disputeScripts = {
+            // Motivo do Cliente: Não recebimento do pedido
+            "Não recebimento do pedido: O pacote não foi entregue.": {
+                "Não recebi o produto devolvido pelo Comprador, mas consta como entregue na Central do Vendedor": [
+                    "Olá, verificamos que o prazo de devolução expirou e o item não retornou ao nosso centro de distribuição.",
+                    "Informamos que, até o presente momento, o rastreio reverso não consta como entregue em nossa unidade em São Carlos.",
+                    "Prezada equipe, o status de devolução permanece pendente; não houve a entrega física do produto pelo comprador.",
+                    "Constatamos que o fluxo logístico de retorno foi interrompido, resultando na não recepção da mercadoria.",
+                    "Solicitamos a mediação, pois o comprador não efetuou a postagem do item dentro do prazo regulamentar.",
+                    "Notificamos que o objeto de logística reversa não deu entrada em nossa expedição técnica.",
+                    "Conforme nosso controle de recebimento, o pacote referente a esta disputa nunca chegou ao destino final.",
+                    "Pedimos o encerramento da disputa a nosso favor, visto que o produto permanece em posse do comprador.",
+                    "Não houve tentativa de entrega por parte da transportadora em nossa sede, inviabilizando a conferência.",
+                    "Ressaltamos que o recebimento do item é condição essencial para o reembolso, o que não ocorreu neste caso."
+                ]
+            },
+
+            // Motivo do Cliente: Produto incompleto
+            "Produto incompleto: Faltando itens ou componentes.": {
+                "Pedido foi enviado com todos os seus componentes e na quantidade correta. Solicito a compensação pelo pedido": [
+                    "Reafirmamos que o pedido passou por conferência dupla e foi postado com todos os acessórios inclusos.",
+                    "Nosso registro de pesagem na fábrica comprova que todos os componentes estavam presentes na caixa.",
+                    "O item foi lacrado em nossa expedição contendo o kit completo, conforme descrito no título do anúncio.",
+                    "Prezada equipe, garantimos que o produto não possui partes faltando, seguindo o padrão de montagem industrial.",
+                    "Verificamos que o checklist de saída da PRATIK confirmou a presença de todos os parafusos e conexões.",
+                    "O envio foi auditado por nossa equipe técnica e saiu da unidade de São Carlos 100% completo.",
+                    "Não há possibilidade de itens faltantes, visto que utilizamos embalagens padronizadas para o kit total.",
+                    "As imagens de segurança da nossa área de embalagem mostram a inserção de todos os componentes no pacote.",
+                    "O peso final do volume postado atesta que nenhum item foi deixado para trás no momento da separação.",
+                    "O produto é vendido em embalagem selada de fábrica, o que garante a presença de todas as suas partes."
+                ],
+                "O pacote chegou vazio ou estão faltando peças e/ou acessórios no pedido que foi devolvido pelo Comprador": [
+                    "Ao abrir o pacote de devolução, constatamos a ausência do produto principal, restando apenas a embalagem externa.",
+                    "Informamos que o kit retornou incompleto, faltando componentes essenciais que foram originalmente enviados.",
+                    "Identificamos uma divergência grave: o peso do pacote recebido é inferior ao peso da postagem inicial.",
+                    "Prezada equipe, o comprador devolveu apenas parte do pedido, retendo acessórios fundamentais do produto.",
+                    "Verificamos que a embalagem de retorno foi violada e o conteúdo interno não corresponde ao que foi vendido.",
+                    "A conferência técnica de entrada registrou que o pacote chegou vazio, configurando prejuízo total à PRATIK.",
+                    "Notamos a falta de peças vitais para o funcionamento do item, tornando a devolução parcial e inválida.",
+                    "O peso aferido na transportadora confirma que o volume devolvido não contém todos os itens do anúncio.",
+                    "Solicitamos revisão, pois o pacote de retorno não continha o item descrito na nota fiscal de envio.",
+                    "Constatamos que o item foi retirado da caixa antes da devolução, restando apenas materiais de enchimento."
+                ]
+            },
+
+            // Motivo do Cliente: Produto incorreto
+            "Produto incorreto: Cor, tamanho ou modelo diferente do anunciado.": {
+                "O produto que recebi não é o mesmo que enviei ao Comprador": [
+                    "Identificamos que o item devolvido pertence a outra marca/modelo, não sendo o produto fabricado pela PRATIK.",
+                    "O comprador efetuou a substituição do produto novo enviado por um item usado e de procedência distinta.",
+                    "Verificamos que os números de série e etiquetas de identificação não coincidem com os registros de nossa fábrica.",
+                    "O produto retornado apresenta características físicas diferentes do anunciado e enviado originalmente.",
+                    "Houve uma tentativa de devolução de um item similar, porém nitidamente inferior e já desgastado pelo tempo.",
+                    "Constatamos que a mercadoria devolvida é um produto antigo do cliente, enviado em lugar do nosso item novo.",
+                    "Informamos que o objeto recebido na devolução não consta em nosso catálogo de estoque ou produção.",
+                    "A peça retornada possui dimensões e acabamentos que divergem totalmente do padrão de qualidade enviado.",
+                    "Verificamos através de fotos que o item devolvido foi trocado por um produto de terceiros.",
+                    "Solicitamos mediação imediata, pois recebemos um objeto estranho ao pedido original do cliente."
+                ]
+            },
+
+            // Motivo do Cliente: Produto danificado
+            "Produto danificado: Avarias no transporte (quebrado, amassado).": {
+                "Pedido foi danificado, apesar de ter sido enviado em embalagem adequada. Solicito a compensação pelo pedido": [
+                    "O item foi protegido com camadas de reforço, porém a força do impacto no transporte rompeu a embalagem.",
+                    "Utilizamos embalagens de alta resistência, mas o tratamento da transportadora causou o dano ao produto.",
+                    "Informamos que o padrão de embalagem da PRATIK excede as normas, sendo o dano fruto de mau uso logístico.",
+                    "Apesar de envolto em material protetor, o produto sofreu pressão excessiva durante o empilhamento na carga.",
+                    "O pacote foi enviado com sinalização de 'Frágil' e proteção interna, mas não resistiu à queda no trajeto.",
+                    "Prezada equipe, o dano ocorreu por falha externa, visto que a embalagem utilizada é testada para transporte longo.",
+                    "Verificamos que a caixa chegou amassada ao cliente, evidenciando falha na custódia da empresa de entregas.",
+                    "Mesmo com plástico bolha e reforço de papelão, o produto foi avariado por condições adversas no transporte.",
+                    "Registramos que o acondicionamento foi feito de forma profissional, não sendo a causa da quebra relatada.",
+                    "O dano é estritamente logístico; nossa embalagem cumpre todos os requisitos de segurança e proteção."
+                ]
+            },
+
+            // Motivo do Cliente: Produto com defeito
+            "Produto com defeito: Não funciona corretamente ou não liga.": {
+                "Recebi produtos devolvidos amassado, arranhado ou quebrado/danos físicos.": [
+                    "Olá, temos conhecimento de que o item foi enviado em bom estado, porém chegou danificado, adquirindo os danos ao longo do processo logístico.",
+                    "Prezada equipe, o produto saiu de nossa fábrica intacto; os danos visíveis na devolução ocorreram durante o transporte de retorno.",
+                    "Verificamos que a integridade física do produto foi comprometida no trajeto, apresentando avarias que não existiam na postagem original.",
+                    "Identificamos que o item retornou quebrado devido ao manuseio inadequado da transportadora ou falta de zelo no reenvio.",
+                    "O laudo de conferência técnica aponta riscos e amassados que inviabilizam a revenda, causados no fluxo logístico.",
+                    "O produto foi enviado em perfeito estado de conservação, mas retornou com avarias estruturais resultantes do transporte.",
+                    "Lamentamos o ocorrido, mas o dano apresentado na devolução é fruto direto do processo de movimentação da carga.",
+                    "Informamos que o item sofreu impactos severos durante a logística reversa, chegando em condições inaceitáveis.",
+                    "Registramos que o produto foi avariado externamente no trajeto de volta, perdendo sua funcionalidade original.",
+                    "A peça apresenta quebras decorrentes de choque mecânico sofrido após sair das mãos do comprador."
+                ]
+            },
+
+            // Motivo do Cliente: Produto diferente do anunciado
+            "Produto diferente do anunciado: Divergência na qualidade ou especificações.": {
+                "O produto que recebi não é o mesmo que enviei ao Comprador": [
+                    "Identificamos que o item devolvido pertence a outra marca/modelo, não sendo o produto fabricado pela PRATIK.",
+                    "O comprador efetuou a substituição do produto novo enviado por um item usado e de procedência distinta.",
+                    "Verificamos que os números de série e etiquetas de identificação não coincidem com os registros de nossa fábrica.",
+                    "O produto retornado apresenta características físicas diferentes do anunciado e enviado originalmente.",
+                    "Houve uma tentativa de devolução de um item similar, porém nitidamente inferior e já desgastado pelo tempo.",
+                    "Constatamos que a mercadoria devolvida é um produto antigo do cliente, enviado em lugar do nosso item novo.",
+                    "Informamos que o objeto recebido na devolução não consta em nosso catálogo de estoque ou produção.",
+                    "A peça retornada possui dimensões e acabamentos que divergem totalmente do padrão de qualidade enviado.",
+                    "Verificamos através de fotos que o item devolvido foi trocado por um produto de terceiros.",
+                    "Solicitamos mediação imediata, pois recebemos um objeto estranho ao pedido original do cliente."
+                ]
+            },
+
+            // Motivo do Cliente: Mudança de ideia
+            "Mudança de ideia: Desistência da compra (deve ser em até 7 dias e o produto sem uso)": {
+                "Não concordo com o desconto das taxas de devolução": [
+                    "Contestamos a taxa, pois a devolução foi motivada por erro de escolha do comprador, sem falha da loja.",
+                    "O vendedor cumpriu integralmente o prazo e as especificações; o custo logístico não deve ser repassado à PRATIK.",
+                    "Não concordamos com a cobrança, visto que o produto é de natureza técnica e foi enviado conforme o anúncio.",
+                    "Solicitamos o estorno da taxa de frete reverso, pois não houve vício ou defeito na mercadoria enviada.",
+                    "A devolução por 'mudança de ideia' deve isentar o vendedor dos custos operacionais, conforme política vigente.",
+                    "Verificamos que o custo logístico foi gerado por negligência do comprador ao não ler as dimensões do produto.",
+                    "Entendemos que a taxa de devolução é indevida, pois o processo de postagem da nossa parte foi impecável.",
+                    "Reivindicamos a isenção das taxas, uma vez que o produto enviado está em plena conformidade com o pedido.",
+                    "O desconto das taxas prejudica a margem da operação por um erro que não foi cometido por nossa expedição.",
+                    "Pedimos a revisão do débito de logística, já que a devolução ocorreu por motivos alheios à nossa responsabilidade."
+                ]
+            }
+        };
+
+        // --- Variáveis DOM ---
+        const customerReasonSelect = document.getElementById('customerReason');
+        const ourJustificationSelect = document.getElementById('ourJustification');
+        const resultArea = document.getElementById('resultArea');
+        const copyButton = document.getElementById('copyButton');
+        const generateButton = document.getElementById('generateButton');
+
+        // --- Funções Principais ---
+
+        /**
+         * Inicializa os dropdowns preenchendo as opções
+         * com base na estrutura de dados (disputeScripts).
+         */
+        function initializeDropdowns() {
+            // Preenche o primeiro dropdown (Motivo do Cliente)
+            const customerReasons = Object.keys(disputeScripts);
+            customerReasons.forEach(reason => {
+                const option = document.createElement('option');
+                option.value = reason;
+                option.textContent = reason;
+                customerReasonSelect.appendChild(option);
+            });
+
+            // Adiciona listener para carregar o segundo dropdown dinamicamente
+            customerReasonSelect.addEventListener('change', populateJustifications);
+        }
+
+        /**
+         * Preenche o segundo dropdown (Nossa Justificativa) com base na seleção do primeiro.
+         */
+        function populateJustifications() {
+            const selectedReason = customerReasonSelect.value;
+            // Limpa o dropdown de justificativas
+            ourJustificationSelect.innerHTML = '<option value="" disabled selected>Selecione a justificativa...</option>';
+
+            if (selectedReason && disputeScripts[selectedReason]) {
+                const justifications = Object.keys(disputeScripts[selectedReason]);
+                justifications.forEach(justification => {
+                    const option = document.createElement('option');
+                    option.value = justification;
+                    option.textContent = justification;
+                    ourJustificationSelect.appendChild(option);
+                });
+            }
+
+            // Limpa o resultado ao mudar o motivo principal
+            resultArea.value = '';
+        }
+
+        /**
+         * Gera o script de defesa com base na combinação selecionada e
+         * aplica a lógica de aleatoriedade para selecionar uma das variantes.
+         */
+        function generateScript() {
+            const selectedReason = customerReasonSelect.value;
+            const selectedJustification = ourJustificationSelect.value;
+
+            // Validação de seleção
+            if (!selectedReason || !selectedJustification) {
+                resultArea.value = "Por favor, selecione ambas as opções para gerar o script.";
+                return;
+            }
+
+            // Acesso à estrutura de dados
+            const scriptsArray = disputeScripts[selectedReason][selectedJustification];
+
+            if (scriptsArray && scriptsArray.length > 0) {
+                // Lógica de aleatoriedade: seleciona um script aleatório da lista
+                const randomIndex = Math.floor(Math.random() * scriptsArray.length);
+                resultArea.value = scriptsArray[randomIndex];
+            } else {
+                resultArea.value = "Nenhum script encontrado para esta combinação. Verifique a estrutura de dados.";
+            }
+        }
+
+        /**
+         * Copia o conteúdo da caixa de texto para a área de transferência.
+         */
+        function copyToClipboard() {
+            if (resultArea.value) {
+                navigator.clipboard.writeText(resultArea.value)
+                    .then(() => {
+                        alert("Texto copiado para a área de transferência!");
+                    })
+                    .catch(err => {
+                        console.error('Erro ao copiar texto:', err);
+                        alert("Erro ao copiar texto. Tente novamente ou copie manualmente.");
+                    });
+            } else {
+                alert("Nenhum texto para copiar.");
+            }
+        }
+
+        // --- Event Listeners ---
+        // Listener para gerar o script ao mudar a justificativa (gatilho principal)
+        ourJustificationSelect.addEventListener('change', generateScript);
+
+        // Listener para gerar uma nova variante do mesmo script
+        generateButton.addEventListener('click', generateScript);
+
+        // Listener para copiar o texto
+        copyButton.addEventListener('click', copyToClipboard);
+
+        // Inicia a aplicação
+        initializeDropdowns();
+    </script>
+
+</body>
+</html>
